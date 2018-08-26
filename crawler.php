@@ -4,6 +4,7 @@ $loader = require __DIR__ . '/vendor/autoload.php';
 
 use Luyo\Stock\Nlog\HighBiasCrawler;
 use Luyo\Stock\Twse\CapitalReductionCrawler;
+use Luyo\Stock\Twse\IndexCrawler;
 use Luyo\Stock\Wespai\StockListCrawler;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -55,6 +56,17 @@ class PickCommand
         return $stock_list;
     }
 
+    public function checkDate()
+    {
+        $index_crawler = new IndexCrawler;
+        $index_info_obj = $index_crawler->run();
+        $latest_trade_day = $index_info_obj->date;
+        if (date('Ymd') !== $latest_trade_day) {
+            return false;
+        }
+        return true;
+    }
+
     public function exec()
     {
         echo "getting stock list...\n";
@@ -100,6 +112,9 @@ class PickCommand
 }
 
 $command = new PickCommand;
+if (!$command->checkDate()) {
+    die('今天非交易日');
+}
 //$command->setBiasFilePath(__DIR__ . "/tests/nlog_bias.html");
 //$command->setCapitalReductionFilePath(__DIR__ . "/tests/capital_reduction.json");
 //$command->setStockListFilePath(__DIR__ . "/tests/stock_list.html");
