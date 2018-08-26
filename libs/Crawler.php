@@ -12,12 +12,22 @@ abstract class Crawler
         $this->file_path = $file_path;
     }
 
+    protected function getContentByFile(): string
+    {
+        return file_get_contents($this->file_path);
+    }
+
+    protected function getContentByUrl(): string
+    {
+            return file_get_contents($this->getUrl());
+    }
+
     protected function getContent(): string
     {
         if (isset($this->file_path)) {
-            return file_get_contents($this->file_path);
+            return $this->getContentByFile();
         } else {
-            return file_get_contents($this->getUrl());
+            return $this->getContentByUrl();
         }
     }
 

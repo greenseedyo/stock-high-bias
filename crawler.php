@@ -81,18 +81,26 @@ class PickCommand
         }
         print_r($result);
         $content = implode("\n", $result);
-        $this->sendMessage();
+        $this->sendMessage($content);
     }
 
     private function sendMessage($content)
     {
         $subject = sprintf("%s 高乖離率", date('Y-m-d'));
         $mail = new PHPMailer(true);
+        $mail->SMTPDebug = 2;
+        $mail->CharSet = 'UTF-8';
+        $mail->isMail();
+        $mail->setFrom('yo@gettoeat.com', 'Yo');
+        $mail->addAddress('turtleegg@gmail.com');
+        $mail->Subject = $subject;
+        $mail->Body = $content;
+        $mail->send();
     }
 }
 
 $command = new PickCommand;
-$command->setBiasFilePath(__DIR__ . "/tests/nlog_bias.html");
-$command->setCapitalReductionFilePath(__DIR__ . "/tests/capital_reduction.json");
-$command->setStockListFilePath(__DIR__ . "/tests/stock_list.html");
+//$command->setBiasFilePath(__DIR__ . "/tests/nlog_bias.html");
+//$command->setCapitalReductionFilePath(__DIR__ . "/tests/capital_reduction.json");
+//$command->setStockListFilePath(__DIR__ . "/tests/stock_list.html");
 $command->exec();
