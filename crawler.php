@@ -12,9 +12,12 @@ use PHPMailer\PHPMailer\Exception;
 
 class PickCommand
 {
+    private $date;
     private $latest_result_file;
     private $history_dir;
-    private $date;
+    private $bias_file_path;
+    private $capital_reduction_file_path;
+    private $stock_list_file_path;
 
     public function __construct(PickConfig $config)
     {
@@ -31,21 +34,10 @@ class PickCommand
         if (!file_exists($this->history_dir)) {
             mkdir($this->history_dir, 0777, true);
         }
-    }
 
-    public function setBiasFilePath($file_path)
-    {
-        $this->bias_file_path = $file_path;
-    }
-
-    public function setCapitalReductionFilePath($file_path)
-    {
-        $this->capital_reduction_file_path = $file_path;
-    }
-
-    public function setStockListFilePath($file_path)
-    {
-        $this->stock_list_file_path = $file_path;
+        $this->bias_file_path = $config->bais_file_path ?: null;
+        $this->capital_reduction_file_path = $config->capital_reduction_file_path ?: null;
+        $this->stock_list_file_path = $config->stock_list_file_path ?: null;
     }
 
     private function getHighBiasStocks()
@@ -170,18 +162,20 @@ class PickCommand
 
 class PickConfig
 {
-    public $data_dir = 'data';
+    public $data_dir = "data";
     public $date;
+    public $bias_file_path;
 }
 
 
 $config = new PickConfig;
 //$config->date = '20180906';
+//$config->bias_file_path = __DIR__ . "tests/nlog_bias.html";
+//$config->capital_reduction_file_path = __DIR__ . "/tests/capital_reduction.json";
+//$config->stock_list_file_path = __DIR__ . "/tests/stock_list.html";
+
 $command = new PickCommand($config);
 if (!$command->checkDate()) {
     die('今天非交易日');
 }
-//$command->setBiasFilePath(__DIR__ . "/tests/nlog_bias.html");
-//$command->setCapitalReductionFilePath(__DIR__ . "/tests/capital_reduction.json");
-//$command->setStockListFilePath(__DIR__ . "/tests/stock_list.html");
 $command->exec();
