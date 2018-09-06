@@ -147,7 +147,7 @@ class PickCommand
 
     private function saveToHistory(array $stock_codes): void
     {
-        $file = "{$this->history_dir}/{$data}.json";
+        $file = "{$this->history_dir}/{$this->date}.json";
         $contents = json_encode($stock_codes);
         file_put_contents($file, $contents);
     }
@@ -181,7 +181,7 @@ $command = new PickCommand($config);
 if (!$command->checkDate()) {
     die('今天非交易日');
 }
-$command->setBiasFilePath(__DIR__ . "/tests/nlog_bias.html");
-$command->setCapitalReductionFilePath(__DIR__ . "/tests/capital_reduction.json");
-$command->setStockListFilePath(__DIR__ . "/tests/stock_list.html");
+//$command->setBiasFilePath(__DIR__ . "/tests/nlog_bias.html");
+//$command->setCapitalReductionFilePath(__DIR__ . "/tests/capital_reduction.json");
+//$command->setStockListFilePath(__DIR__ . "/tests/stock_list.html");
 $command->exec();
