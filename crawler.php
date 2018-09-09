@@ -105,7 +105,10 @@ class PickCommand
             $i ++;
             $name = $stock_list[$code];
             $line = "{$i}. {$code} {$name}: {$bias}";
-            if (isset($latest_result[$code])) {
+            if ($previous_bias = $latest_result[$code]) {
+                $diff = $bias - $previous_bias;
+                $line .= " ({$diff}%)";
+            } else {
                 $line .= ' (new)';
             }
             $result[] = $line;
