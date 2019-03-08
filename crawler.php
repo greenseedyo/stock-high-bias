@@ -46,6 +46,7 @@ class PickCommand
         if ($this->bias_file_path) {
             $crawler->setFilePath($this->bias_file_path);
         }
+        $crawler->setThreshold(30);
         $stock_codes = $crawler->run();
         return $stock_codes;
     }
