@@ -34,15 +34,28 @@ class StockListCrawler extends Crawler
         $dom->preserveWhiteSpace = false;
         @$dom->loadHTML(mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8'));
         $table = $dom->getElementById('example');
-        $tbody = $table->childNodes[1];
+        $elements = array();
+        foreach ($table->childNodes as $i => $node) {
+            if ('tbody' == $node->tagName) {
+                $tbody = $node;
+                break;
+            }
+        }
         $tbody->normalize();
         $stock_list = array();
         foreach ($tbody->childNodes as $tr) {
             if (!$tr instanceof DOMElement) {
                 continue;
             }
-            $code = (string) $tr->childNodes->item(0)->textContent;
-            $name = (string) $tr->childNodes->item(2)->textContent;
+            $tds = array();
+            foreach ($tr->childNodes as $node) {
+                if ('td' != $node->tagName) {
+                    continue;
+                }
+                $tds[] = $node;
+            }
+            $code = (string)$tds[0]->textContent;
+            $name = (string)$tds[1]->textContent;
             $stock_list[$code] = $name;
         }
         return $stock_list;
