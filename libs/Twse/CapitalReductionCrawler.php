@@ -50,6 +50,9 @@ class CapitalReductionCrawler extends Crawler
     {
         $content = $this->getContent();
         $obj = json_decode($content);
+        if (!is_array($obj->data) or empty($obj->data)) {
+            return array();
+        }
         $stock_codes = array();
         foreach ($obj->data as $data) {
             $code = (string) $data[1];
