@@ -112,9 +112,6 @@ class PickCommand
         echo "processing...\n";
 
         $filtered_high_bias_stocks_20 = $this->getFilteredHighBiasStocks($stock_list, $capital_reduction_codes, $high_bias_stocks_20);
-        $this->saveToLatestResult($filtered_high_bias_stocks_20);
-        $this->saveToHistory($filtered_high_bias_stocks_20);
-
         $filtered_high_bias_stocks_30 = $this->getFilteredHighBiasStocks($stock_list, $capital_reduction_codes, $high_bias_stocks_30);
         $result = array();
         $latest_result = $this->getLatestResult();
@@ -132,6 +129,8 @@ class PickCommand
         }
         $content = implode("\n", $result);
         $this->sendMessage($content);
+        $this->saveToLatestResult($filtered_high_bias_stocks_20);
+        $this->saveToHistory($filtered_high_bias_stocks_20);
     }
 
     private function getFilteredHighBiasStocks($stock_list, $capital_reduction_codes, $high_bias_stocks): array
