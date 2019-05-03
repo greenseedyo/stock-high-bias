@@ -46,7 +46,6 @@ class HighBiasCrawler extends Crawler
             $code = (string) trim($tr->childNodes[2]->nodeValue);
             $result[$code] = $bias;
         }
-        self::$result = $result;
         return $result;
     }
 }
