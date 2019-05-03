@@ -18,11 +18,13 @@ class PickCommand
     private $bias_file_path;
     private $capital_reduction_file_path;
     private $stock_list_file_path;
+    private $debug_mode;
 
     public function __construct(PickConfig $config)
     {
         $data_dir = $config->data_dir;
         $this->date = $config->date ?: date('Ymd');
+        $this->debug_mode = $config->debug_mode ?: false;
         if (!is_dir($data_dir)) {
             mkdir($data_dir, 0777, true);
         }
@@ -84,6 +86,9 @@ class PickCommand
 
     public function checkHasRun()
     {
+        if ($this->debug_mode) {
+            return false;
+        }
         $file_name = $this->getHistoryFileName();
         if (file_exists($file_name)) {
             return true;
@@ -208,8 +213,10 @@ class PickConfig
 }
 
 
+$options = getopt('d:x:');
 $config = new PickConfig;
-//$config->date = '20180906';
+$config->date = $options['d'];
+$config->debug_mode = $options['x'];
 //$config->bias_file_path = __DIR__ . "tests/nlog_bias.html";
 //$config->capital_reduction_file_path = __DIR__ . "/tests/capital_reduction.json";
 //$config->stock_list_file_path = __DIR__ . "/tests/stock_list.html";
