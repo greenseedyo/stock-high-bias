@@ -8,7 +8,6 @@ class HighBiasCrawler extends Crawler
 {
     private $uri = 'http://stock.nlog.cc/SS/apdr60';
     private $threshold = 20;
-    private static $result;
 
     public function setThreshold($threshold): void
     {
@@ -22,9 +21,6 @@ class HighBiasCrawler extends Crawler
 
     public function run(): array
     {
-        if (self::$result) {
-            return self::$result;
-        }
         $html = $this->getContent();
         $dom = new DOMDocument();
         @$dom->loadHTML($html);
