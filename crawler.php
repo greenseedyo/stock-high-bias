@@ -82,8 +82,21 @@ class PickCommand
         return true;
     }
 
+    public function checkHasRun()
+    {
+        $file_name = $this->getHistoryFileName();
+        if (file_exists($file_name)) {
+            return true;
+        }
+        return false;
+    }
+
     public function exec()
     {
+        if ($this->checkHasRun()) {
+            echo "history file exists, skipped.\n";
+            return;
+        }
         echo "getting stock list...\n";
         $stock_list = $this->getStockList();
         echo "getting capital reduction stocks...\n";
@@ -152,9 +165,15 @@ class PickCommand
         file_put_contents($this->latest_result_file, $contents);
     }
 
-    private function saveToHistory(array $stock_codes): void
+    private function getHistoryFileName()
     {
         $file_name = "{$this->history_dir}/{$this->date}.csv";
+        return $file_name;
+    }
+
+    private function saveToHistory(array $stock_codes): void
+    {
+        $file_name = $this->getHistoryFileName();
         if (file_exists($file_name)) {
             unlink($file_name);
         }
